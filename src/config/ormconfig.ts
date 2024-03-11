@@ -4,7 +4,6 @@ import { join } from "path";
 import { DataSourceOptions } from "typeorm";
 import { SeederOptions } from "typeorm-extension";
 import setting from "./setting";
-import { Posts } from "src/entities/posts";
 const synchronize = process.env.NODE_ENV === "local";
 export const ormconfig: TypeOrmModuleOptions & SeederOptions & DataSourceOptions = {
   type: "mysql",
