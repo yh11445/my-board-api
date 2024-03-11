@@ -20,8 +20,8 @@ export class Comments {
   writer: string;
 
   @CreateDateColumn()
-  createdDt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedDt: Date;
+  updated_at: Date;
 }

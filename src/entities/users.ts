@@ -12,8 +12,8 @@ export class Users {
   username: string;
 
   @CreateDateColumn()
-  createdDt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedDt: Date;
+  updated_at: Date;
 }

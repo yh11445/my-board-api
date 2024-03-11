@@ -9,8 +9,8 @@ export class Boards {
   name: string;
 
   @CreateDateColumn()
-  createdDt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedDt: Date;
+  updated_at: Date;
 }

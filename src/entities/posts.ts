@@ -25,10 +25,10 @@ export class Posts {
   writer: string;
 
   @CreateDateColumn()
-  createdDt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedDt: Date;
+  updated_at: Date;
 
   @Column({ default: "N" })
   deleted: string;
