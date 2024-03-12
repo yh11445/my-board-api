@@ -3,12 +3,13 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Posts } from "src/entities/posts";
 import { Repository } from "typeorm";
 import paginator from "../../utils/paginators";
+import { CreatePostDto } from "src/dto/create-post.dto";
 
 @Injectable()
 export class PostsService {
   constructor(@InjectRepository(Posts) private postRepository: Repository<Posts>) {}
 
-  createPost(post: Posts): Promise<Posts> {
+  createPost(post: CreatePostDto): Promise<Posts> {
     return this.postRepository.save(post);
   }
 

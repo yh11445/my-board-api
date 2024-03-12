@@ -1,14 +1,20 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Res } from "@nestjs/common";
 import { PostsService } from "./posts.service";
-import { Posts } from "src/entities/posts";
-import { Response } from "express";
+import { Transactional } from "typeorm-transactional";
+import { createPostSchema } from "src/common/decorators/swagger/app/post.decorator";
+import { CreatePostDto } from "src/dto/create-post.dto";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-@Controller("posts")
+@Controller("api/posts")
+@ApiBearerAuth()
+@ApiTags("Posts")
 export class PostsController {
   constructor(private postsService: PostsService) {}
 
   @Post()
-  async createPost(@Res() res: Response, @Body() post: Posts) {
+  @Transactional()
+  @createPostSchema()
+  async createPost(@Body() post: CreatePostDto) {
     console.log(post);
     const newPost = await this.postsService.createPost(post);
     return newPost;
