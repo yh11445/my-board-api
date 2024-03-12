@@ -8,6 +8,8 @@ import { AcceptLanguageResolver, CookieResolver, I18nModule } from "nestjs-i18n"
 import { join } from "path";
 import { addTransactionalDataSource } from "typeorm-transactional";
 import { dataSource } from "@database/data-source";
+import { PostsModule } from "./posts/posts.module";
+import { BoardsModule } from "./boards/boards.module";
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { dataSource } from "@database/data-source";
         return addTransactionalDataSource(dataSource);
       },
     }),
+    PostsModule,
+    BoardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

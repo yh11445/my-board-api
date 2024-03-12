@@ -1,27 +1,39 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId, UpdateDateColumn } from "typeorm";
 import { Boards } from "./boards";
 import { Users } from "./users";
+import { NumProperty, StringProperty } from "src/common/decorators/common/property.decorator";
 
 @Entity()
 export class Posts {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @ManyToOne(() => Boards)
-  // @JoinColumn({ name: "id" })
-  // board: Boards;
-
-  // @ManyToOne(() => Users)
-  // @JoinColumn({ name: "id" })
-  // user: Users;
+  @Column()
+  @NumProperty()
+  board_id: number;
 
   @Column()
+  @NumProperty()
+  user_id: number;
+
+  @ManyToOne(() => Boards, (store) => store.id)
+  @JoinColumn({ name: "board_id" })
+  board: Boards;
+
+  @ManyToOne(() => Users, (user) => user.id)
+  @JoinColumn({ name: "user_id" })
+  user: Users;
+
+  @Column()
+  @StringProperty()
   title: string;
 
-  @Column()
+  @Column({ type: "text" })
+  @StringProperty()
   content: string;
 
   @Column()
+  @StringProperty()
   writer: string;
 
   @CreateDateColumn()
