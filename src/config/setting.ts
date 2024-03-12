@@ -12,6 +12,10 @@ import { join } from "path";
     dotenv.config({ path: join(process.cwd(), ".env") });
   }
 }
+
+export const isProd = process.env.NODE_ENV === "production";
+export const isDev = process.env.NODE_ENV === "development";
+
 export default {
   DATABASE: {
     HOST: process.env.DATABASE_HOST,
@@ -20,4 +24,8 @@ export default {
     USERNAME: process.env.DATABASE_USERNAME,
     PASSWORD: process.env.DATABASE_PASSWORD,
   },
+  PORT: process.env.PORT || 4000,
+  LOCALE: process.env.LOCALE || "ko",
+  BODY_LIMIT: 300 * 1024 * 1024,
+  SESSION_SECRET: process.env.SESSION_SECRET || "a secret with minimum length of 32 characters",
 };

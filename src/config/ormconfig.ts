@@ -13,8 +13,8 @@ export const ormconfig: TypeOrmModuleOptions & SeederOptions & DataSourceOptions
   password: setting.DATABASE.PASSWORD,
   database: setting.DATABASE.NAME,
   entities: [join(__dirname, "/../entities/**/*{.ts,.js}")],
-  // migrations: [join(__dirname, "./../database/migrations/*{.ts,.js}")],
-  // seeds: [join(__dirname, "./../database/seeds/*{.ts,.js}")],
+  migrations: [join(__dirname, "./../database/migrations/*{.ts,.js}")],
+  seeds: [join(__dirname, "./../database/seeds/*{.ts,.js}")],
   synchronize,
   logging: true,
   extra: {
