@@ -13,6 +13,7 @@ async function bootstrap() {
   adapter(app);
 
   await app.listen(PORT, "0.0.0.0");
+
   console.log(`http://localhost:${PORT}/api`);
 }
 bootstrap();
