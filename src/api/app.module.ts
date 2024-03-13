@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ormconfig } from "@config/ormconfig";
@@ -34,7 +33,7 @@ import { BoardsModule } from "./boards/boards.module";
     PostsModule,
     BoardsModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [AppService],
 })
 export class AppModule {}

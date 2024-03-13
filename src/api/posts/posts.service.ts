@@ -3,19 +3,21 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Posts } from "src/entities/posts";
 import { Repository } from "typeorm";
 import paginator from "../../utils/paginators";
+import { CreatePostDto } from "src/dto/create-post.dto";
+import { Transactional } from "typeorm-transactional";
+import { UpdatePostDto } from "src/dto/update-post.dto";
 
 @Injectable()
 export class PostsService {
   constructor(@InjectRepository(Posts) private postRepository: Repository<Posts>) {}
 
-  createPost(post: Posts): Promise<Posts> {
+  @Transactional()
+  createPost(post: CreatePostDto): Promise<Posts> {
     return this.postRepository.save(post);
   }
 
   async getPost(id: number) {
-    const post = await this.postRepository.findOne({
-      where: { id },
-    });
+    const post = await this.postRepository.findOne({ where: { id }, relations: { user: true } });
 
     return post;
   }
@@ -47,21 +49,17 @@ export class PostsService {
     return [posts, paginatorObj];
   }
 
-  async modifyPost(id: number, _post: Posts) {
-    const post = await this.getPost(id);
-    post.title = _post.title;
-    post.content = _post.content;
-
-    const modifiedPost = this.postRepository.save(post);
-    return modifiedPost;
+  async modifyPost(id: number, _post: UpdatePostDto) {
+    return this.postRepository.update({ id }, _post);
   }
 
   async deletePost(id: number) {
-    const post = await this.getPost(id);
-    post.deleted = "Y";
+    return this.postRepository.softDelete(id);
+    // const post = await this.getPost(id);
+    // post.deleted = "Y";
 
-    const result = this.postRepository.save(post);
-    if (result !== null) return true;
-    else return false;
+    // const result = this.postRepository.save(post);
+    // if (result !== null) return true;
+    // else return false;
   }
 }

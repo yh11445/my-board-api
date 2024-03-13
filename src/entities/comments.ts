@@ -1,10 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToOne } from "typeorm";
 import { Posts } from "./posts";
-import { NumProperty } from "src/common/decorators/common/property.decorator";
+import { DateProperty, NumProperty, ObjectProperty, StringProperty } from "src/common/decorators/common/property.decorator";
 
 @Entity()
 export class Comments {
   @PrimaryGeneratedColumn()
+  @NumProperty()
   id: number;
 
   @Column()
@@ -13,23 +14,30 @@ export class Comments {
 
   @ManyToOne(() => Posts, (post) => post.id)
   @JoinColumn({ name: "post_id" })
+  @ObjectProperty()
   post: Posts;
 
   @Column()
+  @NumProperty()
   depth: number;
 
   @Column()
+  @NumProperty()
   parent_id: number;
 
   @Column()
+  @StringProperty()
   content: string;
 
   @Column()
+  @StringProperty()
   writer: string;
 
   @CreateDateColumn()
+  @DateProperty()
   created_at: Date;
 
   @UpdateDateColumn()
+  @DateProperty()
   updated_at: Date;
 }

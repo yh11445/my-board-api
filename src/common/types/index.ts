@@ -1,2 +1,2 @@
-export * from "./paging.types"
-export * from "./fastify.file"
+export * from "./paging.types";
+export * from "./fastify.file";
