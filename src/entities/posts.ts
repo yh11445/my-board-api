@@ -1,11 +1,22 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, RelationId, UpdateDateColumn } from "typeorm";
+import {
+  AfterLoad,
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 import { Boards } from "./boards";
 import { Users } from "./users";
 import { DateProperty, NumProperty, ObjectProperty, StringProperty } from "src/common/decorators/common/property.decorator";
-import { GetPostDto } from "src/dto/get-post.dto";
+import { Exclude } from "class-transformer";
 
 @Entity()
-export class Posts {
+export class Posts extends BaseEntity {
   @PrimaryGeneratedColumn()
   @NumProperty()
   id: number;
@@ -36,7 +47,6 @@ export class Posts {
   @StringProperty()
   content: string;
 
-  @Column()
   @StringProperty()
   writer: string;
 
@@ -48,21 +58,22 @@ export class Posts {
   @DateProperty()
   updated_at: Date;
 
-  @Column({ default: "N" })
-  @StringProperty()
-  deleted: string;
+  @DeleteDateColumn()
+  @DateProperty()
+  deleted_at: Date;
 
-  // static convertEntityToDto(entity: Posts): GetPostDto {
-  //   const dto = new GetPostDto();
-  //   dto.id = entity.id;
-  //   dto.board_id = entity.board_id;
-  //   dto.user_id = entity.user_id;
-  //   dto.title = entity.title;
-  //   dto.content = entity.content;
-  //   dto.writer = entity.writer;
-  //   dto.created_at = entity.created_at;
-  //   dto.updated_at = entity.updated_at;
-  //   dto.deleted = entity.deleted;
-  //   return dto;
+  // @Column({ default: "N" })
+  // @StringProperty()
+  // @Exclude()
+  // deleted: string;
+
+  @AfterLoad()
+  toDisplay() {
+    this.writer = this.user?.username;
+  }
+
+  // async entityToDto(entity: Partial<Posts>) {
+  //   const clazz = plainToClass(GetPostDto, entity);
+  //   return await checkValidation(clazz);
   // }
 }

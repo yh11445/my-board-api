@@ -8,11 +8,11 @@ import { winstonLogger } from "@common/loggers";
 
 const PORT = setting.PORT || 4000;
 async function bootstrap() {
-  initializeTransactionalContext();
+  initializeTransactionalContext(); // typeorm-transactional
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), { logger: winstonLogger });
   adapter(app);
 
-  await app.listen(PORT, "0.0.0.0");
+  await app.listen(PORT, "0.0.0.0"); // fastify 127.0.0.1
 
   console.log(`http://localhost:${PORT}/api`);
 }
