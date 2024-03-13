@@ -4,11 +4,13 @@ import { Posts } from "src/entities/posts";
 import { Repository } from "typeorm";
 import paginator from "../../utils/paginators";
 import { CreatePostDto } from "src/dto/create-post.dto";
+import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class PostsService {
   constructor(@InjectRepository(Posts) private postRepository: Repository<Posts>) {}
 
+  @Transactional()
   createPost(post: CreatePostDto): Promise<Posts> {
     return this.postRepository.save(post);
   }
@@ -48,6 +50,7 @@ export class PostsService {
     return [posts, paginatorObj];
   }
 
+  @Transactional()
   async modifyPost(id: number, _post: Posts) {
     const post = await this.getPost(id);
     post.title = _post.title;
@@ -57,6 +60,7 @@ export class PostsService {
     return modifiedPost;
   }
 
+  @Transactional()
   async deletePost(id: number) {
     const post = await this.getPost(id);
     post.deleted = "Y";

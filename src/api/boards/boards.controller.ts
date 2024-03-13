@@ -1,7 +1,10 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 import { PostsService } from "../posts/posts.service";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
-@Controller("boards")
+@Controller("api/boards")
+@ApiBearerAuth()
+@ApiTags("Boards")
 export class BoardsController {
   constructor(private postsService: PostsService) {}
 
