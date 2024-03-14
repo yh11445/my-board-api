@@ -1,0 +1,13 @@
+### 댓글 작성
+POST http://localhost:4000/api/comments
+Content-Type: application/json
+
+{
+  
+  "post_id": 7,
+  "user_id": 1,
+  "depth": 0,
+  "content": "댓글 와하하하하",
+  "writer": "kim"
+}
+

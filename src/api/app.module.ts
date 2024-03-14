@@ -9,6 +9,7 @@ import { addTransactionalDataSource } from "typeorm-transactional";
 import { dataSource } from "@database/data-source";
 import { PostsModule } from "./posts/posts.module";
 import { BoardsModule } from "./boards/boards.module";
+import { CommentsModule } from "./comments/comments.module";
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { BoardsModule } from "./boards/boards.module";
     }),
     PostsModule,
     BoardsModule,
+    CommentsModule,
   ],
   controllers: [],
   providers: [AppService],
