@@ -22,3 +22,6 @@ Content-Type: application/json
   "title": "수정된 title",
   "content": "수정된 content"
 }
+
+### 글 삭제
+DELETE http://localhost:4000/api/posts/3

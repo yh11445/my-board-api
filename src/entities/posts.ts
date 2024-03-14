@@ -13,7 +13,6 @@ import {
 import { Boards } from "./boards";
 import { Users } from "./users";
 import { DateProperty, NumProperty, ObjectProperty, StringProperty } from "src/common/decorators/common/property.decorator";
-import { Exclude } from "class-transformer";
 
 @Entity()
 export class Posts extends BaseEntity {
@@ -62,18 +61,8 @@ export class Posts extends BaseEntity {
   @DateProperty()
   deleted_at: Date;
 
-  // @Column({ default: "N" })
-  // @StringProperty()
-  // @Exclude()
-  // deleted: string;
-
   @AfterLoad()
   toDisplay() {
     this.writer = this.user?.username;
   }
-
-  // async entityToDto(entity: Partial<Posts>) {
-  //   const clazz = plainToClass(GetPostDto, entity);
-  //   return await checkValidation(clazz);
-  // }
 }

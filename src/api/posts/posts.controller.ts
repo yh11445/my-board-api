@@ -2,7 +2,7 @@ import { entityToDto } from "src/common/decorators/swagger/common";
 import { Body, Controller, Delete, Get, Param, Post, Put, Res } from "@nestjs/common";
 import { PostsService } from "./posts.service";
 import { Transactional } from "typeorm-transactional";
-import { createPostSchema, getPostSchema } from "src/common/decorators/swagger/app/post.decorator";
+import { createPostSchema, deletePostSchema, getPostSchema, updatePostSchema } from "src/common/decorators/swagger/app/post.decorator";
 import { CreatePostDto } from "src/dto/create-post.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { GetPostDto } from "src/dto/get-post.dto";
@@ -19,7 +19,8 @@ export class PostsController {
   @createPostSchema()
   async createPost(@Body() post: CreatePostDto) {
     const newPost = await this.postsService.createPost(post);
-    return newPost;
+    const data = await entityToDto(GetPostDto, newPost);
+    return { data };
   }
 
   @Get("/:id")
@@ -32,13 +33,20 @@ export class PostsController {
 
   @Put("/:id")
   @Transactional()
-  modifyPost(@Param("id") id: number, @Body() post: UpdatePostDto) {
-    const modifiedPost = this.postsService.modifyPost(id, post);
-    return modifiedPost;
+  @updatePostSchema()
+  async modifyPost(@Param("id") id: number, @Body() post: UpdatePostDto) {
+    const result = await this.postsService.modifyPost(id, post);
+    if (result !== null) {
+      const data = await entityToDto(GetPostDto, result);
+      return { data };
+    } else {
+      return null;
+    }
   }
 
   @Delete("/:id")
   @Transactional()
+  @deletePostSchema()
   deletePost(@Param("id") id: number) {
     return this.postsService.deletePost(id);
   }
