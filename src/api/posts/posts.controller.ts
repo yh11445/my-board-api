@@ -1,12 +1,12 @@
 import { entityToDto } from "src/common/decorators/swagger/common";
-import { Body, Controller, Delete, Get, Param, Post, Put, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { PostsService } from "./posts.service";
 import { Transactional } from "typeorm-transactional";
 import { createPostSchema, getPostSchema } from "src/common/decorators/swagger/app/post.decorator";
-import { CreatePostDto } from "src/dto/create-post.dto";
+import { CreatePostDto } from "src/dto/posts/create-post.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { GetPostDto } from "src/dto/get-post.dto";
-import { UpdatePostDto } from "src/dto/update-post.dto";
+import { UpdatePostDto } from "src/dto/posts/update-post.dto";
+import { PostResponse } from "src/dto/posts/post.response";
 
 @Controller("api/posts")
 @ApiBearerAuth()
@@ -19,14 +19,14 @@ export class PostsController {
   @createPostSchema()
   async createPost(@Body() post: CreatePostDto) {
     const newPost = await this.postsService.createPost(post);
-    return newPost;
+    return PostResponse.toDto(newPost);
   }
 
   @Get("/:id")
   @getPostSchema()
   async getPost(@Param("id") id: number) {
     const post = await this.postsService.getPost(id);
-    const data = await entityToDto(GetPostDto, post);
+    const data = PostResponse.toDto(post);
     return { data };
   }
 
