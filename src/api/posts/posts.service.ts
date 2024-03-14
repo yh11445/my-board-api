@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Posts } from "src/entities/posts";
 import { Repository } from "typeorm";
-import paginator from "../../utils/paginators";
-import { CreatePostDto } from "src/dto/create-post.dto";
-import { UpdatePostDto } from "src/dto/update-post.dto";
+import paginator from "src/utils/paginators";
+import { CreatePostDto } from "src/dto/posts/create-post.dto";
+import { UpdatePostDto } from "src/dto/posts/update-post.dto";
 
 @Injectable()
 export class PostsService {
@@ -20,35 +20,28 @@ export class PostsService {
     return post;
   }
 
-  async getPosts(boardId: number, page: number, search: string) {
+  async getPostsAndPaginator(boardId: number, page: number, search: string): Promise<any[]> {
     const perPage = 10;
     const offset = (page - 1) * perPage;
-    const query = `SELECT * FROM posts
-        WHERE board_id = ? AND title LIKE ? AND deleted = 'N'
-        ORDER BY created_at DESC LIMIT ?, ?`;
-    // const posts = await this.postRepository
-    //   .createQueryBuilder()
-    //   .select("*")
-    //   .from(Posts, "posts")
-    //   .where("board_id = :boardId AND title LIKE :search", { boardId, search })
-    //   .orderBy("created_at", "DESC")
-    //   .offset(offset)
-    //   .limit(perPage)
-    //   .getMany();
-
-    // '%' + search + '%' 형태로 검색어를 포함한 문자열로 변경
     const formattedSearch = `%${search}%`;
 
-    const [posts, totalCount] = await Promise.all([
-      this.postRepository.query(query, [boardId, formattedSearch, offset, perPage]),
-      this.postRepository.query(`SELECT COUNT(*) as count FROM posts WHERE board_id = ? AND title LIKE ? AND deleted = 'N'`, [
-        boardId,
-        formattedSearch,
-      ]),
-    ]);
+    const posts = await this.postRepository
+      .createQueryBuilder("posts")
+      .select()
+      .where("posts.board_id = :boardId AND posts.title LIKE :formattedSearch", { boardId, formattedSearch })
+      .orderBy("posts.created_at", "DESC")
+      .offset(offset)
+      .limit(perPage)
+      .getMany();
+
+    const totalCount = await this.postRepository
+      .createQueryBuilder("posts")
+      .where("posts.board_id = :boardId AND posts.title LIKE :formattedSearch", { boardId, formattedSearch })
+      .orderBy("posts.created_at", "DESC")
+      .getCount();
 
     const paginatorObj = paginator({
-      totalCount: totalCount[0].count,
+      totalCount: totalCount,
       page,
       perPage,
     });
@@ -69,6 +62,7 @@ export class PostsService {
   async deletePost(id: number) {
     const deleteResult = this.postRepository.softDelete(id);
     if (deleteResult !== null) {
+      // 삭제 처리 제대로 안됐을 경우인데 조건문 수정필요
       return true;
     } else {
       return false;

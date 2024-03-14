@@ -16,7 +16,9 @@ export class BoardsController {
     if (page === undefined) page = 1;
     else page = parseInt(page + "");
 
-    const [posts, paginator] = await this.postsService.getPosts(id, page, search);
+    const [posts, paginator] = await this.postsService.getPostsAndPaginator(id, page, search);
+
+    // const posts = await this.postsService.getPostsAndPaginator(id, page, search);
 
     return { posts, paginator };
   }

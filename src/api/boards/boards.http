@@ -1,2 +1,2 @@
 ### 글 목록 조회
-GET http://localhost:4000/boards/1
+GET http://localhost:4000/api/boards/1

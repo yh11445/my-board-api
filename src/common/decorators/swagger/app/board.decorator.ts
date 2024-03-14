@@ -1,6 +1,6 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { GetPostDto } from "src/dto/get-post.dto";
+import { GetPostDto } from "src/dto/posts/get-post.dto";
 import { ApiCommonResponse } from "../common";
 
 const tags = "Boards";
