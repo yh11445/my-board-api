@@ -2,6 +2,7 @@ import { Controller, Get, Param, Query } from "@nestjs/common";
 import { PostsService } from "../posts/posts.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { getPostListSchema } from "src/common/decorators/swagger/app/board.decorator";
+import { PostResponse } from "src/dto/posts/post.response";
 
 @Controller("api/boards")
 @ApiBearerAuth()
@@ -17,9 +18,9 @@ export class BoardsController {
     else page = parseInt(page + "");
 
     const [posts, paginator] = await this.postsService.getPostsAndPaginator(id, page, search);
-
+    const postDtos = posts.map((post) => (post = PostResponse.toDto(post)));
     // const posts = await this.postsService.getPostsAndPaginator(id, page, search);
 
-    return { posts, paginator };
+    return { postDtos, paginator };
   }
 }

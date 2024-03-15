@@ -12,6 +12,7 @@ import {
 import { Posts } from "./posts";
 import { DateProperty, NumProperty, ObjectProperty, StringProperty } from "src/common/decorators/common/property.decorator";
 import { Users } from "./users";
+import { IsOptional } from "class-validator";
 
 @Entity()
 export class Comments {
@@ -42,6 +43,7 @@ export class Comments {
   depth: number;
 
   @Column({ nullable: true })
+  @IsOptional()
   @NumProperty()
   parent_id: number | null;
 
