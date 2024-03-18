@@ -29,9 +29,9 @@ export class CommentsController {
   @Get()
   @getCommentsSchema()
   async getComments(@Param("postId") postId: number) {
-    const comments = await this.commentsService.getComments(postId);
-    const commentDtos = comments.map((comment) => CommentResponse.toDto(comment));
-    return commentDtos;
+    const comments = CommentResponse.toDto(await this.commentsService.getComments(postId));
+    // const commentDtos = comments.map((comment) => CommentResponse.toDto(comment));
+    return comments;
   }
 
   @Put("/:id")

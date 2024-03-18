@@ -45,7 +45,7 @@ export class Comments {
   @Column({ nullable: true })
   @IsOptional()
   @NumProperty()
-  parent_id: number | null;
+  parent_id: number;
 
   @Column()
   @StringProperty()

@@ -17,10 +17,11 @@ export class BoardsController {
     if (page === undefined) page = 1;
     else page = parseInt(page + "");
 
-    const [posts, paginator] = await this.postsService.getPostsAndPaginator(id, page, search);
-    const postDtos = posts.map((post) => (post = PostResponse.toDto(post)));
-    // const posts = await this.postsService.getPostsAndPaginator(id, page, search);
+    // const [posts, paginator] = await this.postsService.getPostsAndPaginator(id, page, search);
+    const posts = PostResponse.toDto(await this.postsService.getPosts(id, page, search));
+    const paginator = await this.postsService.getPaginator(id, page, search);
+    // const postDtos = posts.map((post) => (post = PostResponse.toDto(post)));
 
-    return { postDtos, paginator };
+    return { posts, paginator };
   }
 }

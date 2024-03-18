@@ -1,5 +1,6 @@
 import { PickType } from "@nestjs/swagger";
 import { Exclude, plainToClass } from "class-transformer";
+import { isArray } from "class-validator";
 import { Comments } from "src/entities/comments";
 import { Users } from "src/entities/users";
 
@@ -17,7 +18,11 @@ export class CommentResponse extends PickType(Comments, [
   @Exclude()
   user: Users;
 
-  static toDto(entity: Partial<Comments>) {
-    return plainToClass(CommentResponse, entity);
+  static toDto(entity: Partial<Comments> | Partial<Comments[]>) {
+    if (isArray(entity)) {
+      return entity.map((comment) => plainToClass(CommentResponse, comment));
+    } else {
+      return plainToClass(CommentResponse, entity);
+    }
   }
 }

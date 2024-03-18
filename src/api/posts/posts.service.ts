@@ -20,7 +20,7 @@ export class PostsService {
     return post;
   }
 
-  async getPostsAndPaginator(boardId: number, page: number, search: string): Promise<any[]> {
+  async getPosts(boardId: number, page: number, search: string): Promise<any> {
     const perPage = 10;
     const offset = (page - 1) * perPage;
     const formattedSearch = `%${search}%`;
@@ -34,6 +34,13 @@ export class PostsService {
       .limit(perPage)
       .getMany();
 
+    return posts;
+  }
+
+  async getPaginator(boardId: number, page: number, search: string): Promise<any> {
+    const perPage = 10;
+    const formattedSearch = `%${search}%`;
+
     const totalCount = await this.postRepository
       .createQueryBuilder("posts")
       .where("posts.board_id = :boardId AND posts.title LIKE :formattedSearch", { boardId, formattedSearch })
@@ -46,7 +53,7 @@ export class PostsService {
       perPage,
     });
 
-    return [posts, paginatorObj];
+    return paginatorObj;
   }
 
   async modifyPost(id: number, _post: UpdatePostDto) {
