@@ -20,3 +20,10 @@ export const GFXUploadedFile = createParamDecorator((data, ctx: ExecutionContext
   }
   return undefined;
 });
+export const GFXUploadedFile2 = createParamDecorator((data, ctx: ExecutionContext) => {
+  const req: FastifyRequest = ctx.switchToHttp().getRequest();
+  const result: any = req.body;
+  const target: FastifyFile[] = result[data];
+  if (target) return target;
+  else return undefined;
+});

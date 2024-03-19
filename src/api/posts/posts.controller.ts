@@ -1,23 +1,29 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { PostsService } from "./posts.service";
 import { Transactional } from "typeorm-transactional";
-import { createPostSchema, deletePostSchema, getPostSchema, updatePostSchema } from "src/common/decorators/swagger/app/post.decorator";
+import {
+  createPostSchema,
+  deletePostSchema,
+  getPostSchema,
+  updatePostSchema,
+  uploadFileSchema,
+} from "src/common/decorators/swagger/app/post.decorator";
 import { CreatePostDto } from "src/dto/posts/create-post.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { UpdatePostDto } from "src/dto/posts/update-post.dto";
 import { PostResponse } from "src/dto/posts/post.response";
-import { GFXUploadedFile } from "src/common/decorators";
-import path from "path";
-import fs from "fs";
+import { GFXUploadedFile2 } from "src/common/decorators";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import setting from "src/config/setting";
 import { FastifyFile } from "src/common/types";
+import { Images } from "src/entities/images";
+import { ImagesService } from "../images/images.service";
 
 @Controller("api/posts")
 @ApiBearerAuth()
 @ApiTags("Posts")
 export class PostsController {
-  constructor(private postsService: PostsService) {}
+  constructor(private postsService: PostsService, private imagesService: ImagesService) {}
 
   @Post()
   @Transactional()
@@ -27,8 +33,10 @@ export class PostsController {
     return PostResponse.toDto(newPost);
   }
 
-  @Post("/upload")
-  async uploadFile(@GFXUploadedFile("filename") file: FastifyFile) {
+  @Post("/:id/upload")
+  @Transactional()
+  @uploadFileSchema()
+  async uploadFiles(@Param("id") id: number, @GFXUploadedFile2("files") files: FastifyFile[]) {
     const s3 = new S3Client({
       region: setting.AWS.REGION,
       credentials: {
@@ -39,37 +47,43 @@ export class PostsController {
 
     const bucketName = setting.AWS.BUCKET_NAME;
 
-    // 파일 이름과 경로 설정
-    const fileName = `${Date.now()}-${file.filename}`;
+    for (const file of files) {
+      // 파일 이름 설정
+      const fileName = `${Date.now()}-${file.filename}`;
 
-    try {
-      // S3에 파일 업로드
-      const uploadParams = {
-        Bucket: bucketName,
-        Key: fileName,
-        Body: file.data,
-      };
+      try {
+        // S3에 파일 업로드
+        const uploadParams = {
+          Bucket: bucketName,
+          Key: fileName,
+          Body: file.data,
+        };
 
-      const uploadResult = await s3.send(new PutObjectCommand(uploadParams));
+        await s3.send(new PutObjectCommand(uploadParams));
 
-      // console.log(uploadResult);
+        const image = new Images();
+        image.post_id = id;
+        image.bucketname = bucketName;
+        image.filename = fileName;
 
-      // 객체 URL 생성
-      const objectUrl = `https://${bucketName}.s3.${setting.AWS.REGION}.amazonaws.com/${fileName}`;
-
-      // 업로드 성공 응답
-      return { success: true, message: "File uploaded successfully", filename: fileName };
-    } catch (error) {
-      // 업로드 실패 응답
-      return { success: false, message: "Failed to upload file", error: error };
+        await this.imagesService.createImage(image);
+      } catch (error) {
+        // 업로드 실패 응답
+        return { success: false, message: "Failed to upload file", error: error };
+      }
     }
+
+    // 업로드 성공 응답
+    return { success: true, message: "Files uploaded successfully" };
   }
 
   @Get("/:id")
   @getPostSchema()
   async getPost(@Param("id") id: number) {
     const post = await this.postsService.getPost(id);
-    return PostResponse.toDto(post);
+    const images = await this.imagesService.getSignedImageUrls(id);
+    const postDto = PostResponse.toDto(post);
+    return { postDto, images };
   }
 
   @Put("/:id")

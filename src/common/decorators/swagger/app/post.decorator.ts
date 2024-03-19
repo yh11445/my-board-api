@@ -19,3 +19,6 @@ export const updatePostSchema = () => {
 export const deletePostSchema = () => {
   return applyDecorators(ApiOperation({ summary: "게시글 삭제" }), ApiTags(tags));
 };
+export const uploadFileSchema = () => {
+  return applyDecorators(ApiOperation({ summary: "파일 업로드" }), ApiTags(tags));
+};

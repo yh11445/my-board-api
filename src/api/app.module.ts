@@ -10,6 +10,7 @@ import { dataSource } from "@database/data-source";
 import { PostsModule } from "./posts/posts.module";
 import { BoardsModule } from "./boards/boards.module";
 import { CommentsModule } from "./comments/comments.module";
+import { ImagesModule } from "./images/images.module";
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { CommentsModule } from "./comments/comments.module";
     PostsModule,
     BoardsModule,
     CommentsModule,
+    ImagesModule,
   ],
   controllers: [],
   providers: [AppService],
