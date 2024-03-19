@@ -10,7 +10,7 @@ Content-Type: application/json
 }
 
 ### 글 조회
-GET http://localhost:4000/api/posts/11
+GET http://localhost:4000/api/posts/2
 
 ### 글 수정
 PUT http://localhost:4000/api/posts/7

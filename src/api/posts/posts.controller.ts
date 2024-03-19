@@ -12,12 +12,13 @@ import { CreatePostDto } from "src/dto/posts/create-post.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { UpdatePostDto } from "src/dto/posts/update-post.dto";
 import { PostResponse } from "src/dto/posts/post.response";
-import { GFXUploadedFile2 } from "src/common/decorators";
+import { UploadedFile } from "src/common/decorators";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import setting from "src/config/setting";
 import { FastifyFile } from "src/common/types";
 import { Images } from "src/entities/images";
 import { ImagesService } from "../images/images.service";
+import { ImageResponse } from "src/dto/images/image.response";
 
 @Controller("api/posts")
 @ApiBearerAuth()
@@ -36,7 +37,7 @@ export class PostsController {
   @Post("/:id/upload")
   @Transactional()
   @uploadFileSchema()
-  async uploadFiles(@Param("id") id: number, @GFXUploadedFile2("files") files: FastifyFile[]) {
+  async uploadFiles(@Param("id") id: number, @UploadedFile("files") files: FastifyFile[]) {
     const s3 = new S3Client({
       region: setting.AWS.REGION,
       credentials: {
@@ -81,9 +82,11 @@ export class PostsController {
   @getPostSchema()
   async getPost(@Param("id") id: number) {
     const post = await this.postsService.getPost(id);
-    const images = await this.imagesService.getSignedImageUrls(id);
+    const images = await this.imagesService.getImages(id);
     const postDto = PostResponse.toDto(post);
-    return { postDto, images };
+    const imageDtos = ImageResponse.toDto(images);
+
+    return { postDto, imageDtos };
   }
 
   @Put("/:id")
