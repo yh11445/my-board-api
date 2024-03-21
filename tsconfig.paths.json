@@ -4,11 +4,13 @@
     "paths": {
       "src/*": ["src/*"],
       "@api/*": ["src/api/*"],
-      "@database/*": ["src/database/*"],
       "@common/*": ["src/common/*"],
-      "@utils/*": ["src/utils/*"],
+      "@config/*": ["src/config/*"],
       "@constants/*": ["src/constants/*"],
-      "@config/*": ["src/config/*"]
+      "@database/*": ["src/database/*"],
+      "@dto/*": ["src/dto/*"],
+      "@entities/*": ["src/entities/*"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }

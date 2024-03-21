@@ -1,24 +1,19 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { PostsService } from "./posts.service";
+import { PostsService } from "@api/posts/posts.service";
 import { Transactional } from "typeorm-transactional";
-import {
-  createPostSchema,
-  deletePostSchema,
-  getPostSchema,
-  updatePostSchema,
-  uploadFileSchema,
-} from "src/common/decorators/swagger/app/post.decorator";
-import { CreatePostDto } from "src/dto/posts/create-post.dto";
+import { createPostSchema, deletePostSchema, getPostSchema, updatePostSchema, uploadFileSchema } from "@common/decorators/swagger/app/post.decorator";
+import { CreatePostDto } from "@dto/posts/create-post.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { UpdatePostDto } from "src/dto/posts/update-post.dto";
-import { PostResponse } from "src/dto/posts/post.response";
-import { UploadedFile } from "src/common/decorators";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import setting from "src/config/setting";
-import { FastifyFile } from "src/common/types";
-import { Images } from "src/entities/images";
-import { ImagesService } from "../images/images.service";
-import { ImageResponse } from "src/dto/images/image.response";
+import { UpdatePostDto } from "@dto/posts/update-post.dto";
+import { PostResponse } from "@dto/posts/post.response";
+import { UploadedFile } from "@common/decorators";
+import setting from "@config/setting";
+import { FastifyFile } from "@common/types";
+import { Images } from "@entities/images";
+import { ImagesService } from "@api/images/images.service";
+import { ImageResponse } from "@dto/images/image.response";
+import { uploadToS3 } from "@utils/custom-s3-client";
+import { Builder } from "builder-pattern";
 
 @Controller("api/posts")
 @ApiBearerAuth()
@@ -38,34 +33,15 @@ export class PostsController {
   @Transactional()
   @uploadFileSchema()
   async uploadFiles(@Param("id") id: number, @UploadedFile("files") files: FastifyFile[]) {
-    const s3 = new S3Client({
-      region: setting.AWS.REGION,
-      credentials: {
-        accessKeyId: setting.AWS.ACCESS_KEY_ID,
-        secretAccessKey: setting.AWS.SECRET_ACCESS_KEY,
-      },
-    });
-
     const bucketName = setting.AWS.BUCKET_NAME;
 
     for (const file of files) {
-      // 파일 이름 설정
       const fileName = `${Date.now()}-${file.filename}`;
 
       try {
-        // S3에 파일 업로드
-        const uploadParams = {
-          Bucket: bucketName,
-          Key: fileName,
-          Body: file.data,
-        };
+        await uploadToS3(bucketName, fileName, file.data);
 
-        await s3.send(new PutObjectCommand(uploadParams));
-
-        const image = new Images();
-        image.post_id = id;
-        image.bucketname = bucketName;
-        image.filename = fileName;
+        const image = Builder<Images>().post_id(id).bucketname(bucketName).filename(fileName).build();
 
         await this.imagesService.createImage(image);
       } catch (error) {

@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
-import { PostsService } from "../posts/posts.service";
+import { PostsService } from "@api/posts/posts.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { getPostListSchema } from "src/common/decorators/swagger/app/board.decorator";
-import { PostResponse } from "src/dto/posts/post.response";
+import { getPostListSchema } from "@common/decorators/swagger/app/board.decorator";
+import { PostResponse } from "@dto/posts/post.response";
 
 @Controller("api/boards")
 @ApiBearerAuth()

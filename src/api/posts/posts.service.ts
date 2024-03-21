@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Posts } from "src/entities/posts";
+import { Posts } from "@entities/posts";
 import { Repository } from "typeorm";
-import paginator from "src/utils/paginators";
-import { CreatePostDto } from "src/dto/posts/create-post.dto";
-import { UpdatePostDto } from "src/dto/posts/update-post.dto";
+import paginator from "@utils/paginators";
+import { CreatePostDto } from "@dto/posts/create-post.dto";
+import { UpdatePostDto } from "@dto/posts/update-post.dto";
 
 @Injectable()
 export class PostsService {

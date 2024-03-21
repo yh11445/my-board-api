@@ -1,8 +1,8 @@
 import { PickType } from "@nestjs/swagger";
 import { Exclude, plainToClass } from "class-transformer";
 import { isArray } from "class-validator";
-import { Comments } from "src/entities/comments";
-import { Users } from "src/entities/users";
+import { Comments } from "@entities/comments";
+import { Users } from "@entities/users";
 
 export class CommentResponse extends PickType(Comments, [
   "id",

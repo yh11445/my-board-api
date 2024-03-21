@@ -10,9 +10,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Boards } from "./boards";
-import { Users } from "./users";
-import { DateProperty, NumProperty, ObjectProperty, StringProperty } from "src/common/decorators/common/property.decorator";
+import { Boards } from "@entities/boards";
+import { Users } from "@entities/users";
+import { DateProperty, NumProperty, ObjectProperty, StringProperty } from "@common/decorators/common/property.decorator";
 
 @Entity()
 export class Posts extends BaseEntity {

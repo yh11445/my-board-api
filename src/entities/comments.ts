@@ -9,9 +9,9 @@ import {
   DeleteDateColumn,
   AfterLoad,
 } from "typeorm";
-import { Posts } from "./posts";
-import { DateProperty, NumProperty, ObjectProperty, StringProperty } from "src/common/decorators/common/property.decorator";
-import { Users } from "./users";
+import { Posts } from "@entities/posts";
+import { DateProperty, NumProperty, ObjectProperty, StringProperty } from "@common/decorators/common/property.decorator";
+import { Users } from "@entities/users";
 import { IsOptional } from "class-validator";
 
 @Entity()

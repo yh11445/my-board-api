@@ -1,7 +1,7 @@
 import { PickType } from "@nestjs/swagger";
 import { plainToClass } from "class-transformer";
 import { isArray } from "class-validator";
-import { Images } from "src/entities/images";
+import { Images } from "@entities/images";
 
 export class ImageResponse extends PickType(Images, ["signedUrl"]) {
   static toDto(entity: Partial<Images> | Partial<Images[]>) {

@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
-import { CommentsService } from "./comments.service";
+import { CommentsService } from "@api/comments/comments.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Transactional } from "typeorm-transactional";
-import { CreateCommentDto } from "src/dto/comments/create-comment.dto";
-import { CommentResponse } from "src/dto/comments/comment.response";
-import { UpdateCommentDto } from "src/dto/comments/update-comment.dto";
+import { CreateCommentDto } from "@dto/comments/create-comment.dto";
+import { CommentResponse } from "@dto/comments/comment.response";
+import { UpdateCommentDto } from "@dto/comments/update-comment.dto";
 import {
   createCommentSchema,
   deleteCommentSchema,
