@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { AppService } from "./app.service";
+import { AppService } from "@api/app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ormconfig } from "@config/ormconfig";
 import { ScheduleModule } from "@nestjs/schedule";
@@ -7,8 +7,10 @@ import { AcceptLanguageResolver, CookieResolver, I18nModule } from "nestjs-i18n"
 import { join } from "path";
 import { addTransactionalDataSource } from "typeorm-transactional";
 import { dataSource } from "@database/data-source";
-import { PostsModule } from "./posts/posts.module";
-import { BoardsModule } from "./boards/boards.module";
+import { PostsModule } from "@api/posts/posts.module";
+import { BoardsModule } from "@api/boards/boards.module";
+import { CommentsModule } from "@api/comments/comments.module";
+import { ImagesModule } from "@api/images/images.module";
 
 @Module({
   imports: [
@@ -32,8 +34,10 @@ import { BoardsModule } from "./boards/boards.module";
     }),
     PostsModule,
     BoardsModule,
+    CommentsModule,
+    ImagesModule,
   ],
   controllers: [],
-  providers: [AppService],
+  providers: [],
 })
 export class AppModule {}

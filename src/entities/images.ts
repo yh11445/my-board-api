@@ -1,21 +1,21 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
   JoinColumn,
+  ManyToOne,
+  Column,
+  BaseEntity,
   DeleteDateColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
   AfterLoad,
 } from "typeorm";
 import { Posts } from "@entities/posts";
 import { DateProperty, NumProperty, ObjectProperty, StringProperty } from "@common/decorators/common/property.decorator";
-import { Users } from "@entities/users";
-import { IsOptional } from "class-validator";
+import { getS3SignedUrl } from "@utils/custom-s3-client";
 
 @Entity()
-export class Comments {
+export class Images extends BaseEntity {
   @PrimaryGeneratedColumn()
   @NumProperty()
   id: number;
@@ -25,34 +25,17 @@ export class Comments {
   post_id: number;
 
   @Column()
-  @NumProperty()
-  user_id: number;
+  @StringProperty()
+  bucketname: string;
+
+  @Column()
+  @StringProperty()
+  filename: string;
 
   @ManyToOne(() => Posts, (post) => post.id)
   @JoinColumn({ name: "post_id" })
   @ObjectProperty()
   post: Posts;
-
-  @ManyToOne(() => Users, (user) => user.id)
-  @JoinColumn({ name: "user_id" })
-  @ObjectProperty()
-  user: Users;
-
-  @Column()
-  @NumProperty()
-  depth: number;
-
-  @Column({ nullable: true })
-  @IsOptional()
-  @NumProperty()
-  parent_id: number;
-
-  @Column()
-  @StringProperty()
-  content: string;
-
-  @StringProperty()
-  writer: string;
 
   @CreateDateColumn()
   @DateProperty()
@@ -66,8 +49,11 @@ export class Comments {
   @DateProperty()
   deleted_at: Date;
 
+  @StringProperty()
+  signedUrl: string;
+
   @AfterLoad()
-  toDisplay() {
-    this.writer = this.user?.username;
+  async toDisplay() {
+    this.signedUrl = await getS3SignedUrl(this.bucketname, this.filename);
   }
 }
