@@ -11,6 +11,7 @@ import { PostsModule } from "@api/posts/posts.module";
 import { BoardsModule } from "@api/boards/boards.module";
 import { CommentsModule } from "@api/comments/comments.module";
 import { ImagesModule } from "@api/images/images.module";
+import { AuthModule } from "@api/auth/auth.module";
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ImagesModule } from "@api/images/images.module";
     BoardsModule,
     CommentsModule,
     ImagesModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

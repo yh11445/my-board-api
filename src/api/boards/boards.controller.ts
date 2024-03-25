@@ -12,14 +12,14 @@ export class BoardsController {
 
   @Get("/:id")
   @getPostListSchema()
-  async getPosts(@Param("id") id: number, @Query("search") search: string, @Query("page") page: any) {
+  async getPosts(@Param("id") id: number, @Query("search") search: string, @Query("page") page: any, @Query("per_page") perPage = 10) {
     if (search === undefined) search = "";
     if (page === undefined) page = 1;
     else page = parseInt(page + "");
 
     // const [posts, paginator] = await this.postsService.getPostsAndPaginator(id, page, search);
-    const posts = PostResponse.toDto(await this.postsService.getPosts(id, page, search));
-    const paginator = await this.postsService.getPaginator(id, page, search);
+    const posts = PostResponse.toDto(await this.postsService.getPosts(id, page, perPage, search));
+    const paginator = await this.postsService.getPaginator(id, page, perPage, search);
     // const postDtos = posts.map((post) => (post = PostResponse.toDto(post)));
 
     return { posts, paginator };

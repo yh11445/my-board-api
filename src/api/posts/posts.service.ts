@@ -20,8 +20,7 @@ export class PostsService {
     return post;
   }
 
-  async getPosts(boardId: number, page: number, search: string): Promise<any> {
-    const perPage = 10;
+  async getPosts(boardId: number, page: number, perPage: number, search: string): Promise<any> {
     const offset = (page - 1) * perPage;
     const formattedSearch = `%${search}%`;
 
@@ -37,8 +36,8 @@ export class PostsService {
     return posts;
   }
 
-  async getPaginator(boardId: number, page: number, search: string): Promise<any> {
-    const perPage = 10;
+  async getPaginator(boardId: number, page: number, perPage: number, search: string): Promise<any> {
+    if (perPage === undefined) perPage = 10;
     const formattedSearch = `%${search}%`;
 
     const totalCount = await this.postRepository
