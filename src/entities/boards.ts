@@ -1,4 +1,4 @@
-import { DateProperty, NumProperty, StringProperty } from "src/common/decorators/common/property.decorator";
+import { DateProperty, NumProperty, StringProperty } from "@common/decorators/common/property.decorator";
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()

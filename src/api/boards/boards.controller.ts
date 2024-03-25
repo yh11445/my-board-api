@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
-import { PostsService } from "../posts/posts.service";
+import { PostsService } from "@api/posts/posts.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { getPostListSchema } from "@common/decorators/swagger/app/board.decorator";
+import { PostResponse } from "@dto/posts/post.response";
 
 @Controller("api/boards")
 @ApiBearerAuth()
@@ -9,12 +11,16 @@ export class BoardsController {
   constructor(private postsService: PostsService) {}
 
   @Get("/:id")
-  async getPosts(@Param("id") id: number, @Query("search") search: string, @Query("page") page: any) {
+  @getPostListSchema()
+  async getPosts(@Param("id") id: number, @Query("search") search: string, @Query("page") page: any, @Query("per_page") perPage = 10) {
     if (search === undefined) search = "";
     if (page === undefined) page = 1;
     else page = parseInt(page + "");
 
-    const [posts, paginator] = await this.postsService.getPosts(id, page, search);
+    // const [posts, paginator] = await this.postsService.getPostsAndPaginator(id, page, search);
+    const posts = PostResponse.toDto(await this.postsService.getPosts(id, page, perPage, search));
+    const paginator = await this.postsService.getPaginator(id, page, perPage, search);
+    // const postDtos = posts.map((post) => (post = PostResponse.toDto(post)));
 
     return { posts, paginator };
   }

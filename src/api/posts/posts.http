@@ -1,24 +1,25 @@
 ### 글 쓰기
 POST http://localhost:4000/api/posts
 Content-Type: application/json
-
+ 
 {
   "board_id": 1,
   "user_id": 1,
   "title": "title1",
-  "content": "content1",
-  "writer": "kim",
-  "deleted": "N"
+  "content": "content1"
 }
 
 ### 글 조회
-GET http://localhost:4000/api/posts/7
+GET http://localhost:4000/api/posts/8
 
 ### 글 수정
-PUT http://localhost:4000/api/posts/2
+PUT http://localhost:4000/api/posts/7
 Content-Type: application/json
 
 {
   "title": "수정된 title",
   "content": "수정된 content"
 }
+
+### 글 삭제
+DELETE http://localhost:4000/api/posts/3

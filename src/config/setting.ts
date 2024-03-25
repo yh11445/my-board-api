@@ -28,4 +28,12 @@ export default {
   LOCALE: process.env.LOCALE || "ko",
   BODY_LIMIT: 300 * 1024 * 1024,
   SESSION_SECRET: process.env.SESSION_SECRET || "a secret with minimum length of 32 characters",
+  AWS: {
+    ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    REGION: process.env.AWS_REGION,
+    BUCKET_NAME: process.env.AWS_BUCKET_NAME,
+  },
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
 };

@@ -1,8 +1,7 @@
 import { PickType } from "@nestjs/swagger";
-import { Exclude, plainToClass } from "class-transformer";
-import { checkValidation } from "src/common/exceptions";
-import { Posts } from "src/entities/posts";
-import { Users } from "src/entities/users";
+import { plainToClass } from "class-transformer";
+import { checkValidation } from "@common/exceptions";
+import { Posts } from "@entities/posts";
 
 export class GetPostDto extends PickType(Posts, ["id", "board_id", "user_id", "title", "content", "writer", "created_at", "updated_at"]) {
   public async toEntity<T>(entity: Partial<T>) {
